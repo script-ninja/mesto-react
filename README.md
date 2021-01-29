@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Mesto: сервис публикации фотографий
+
+`Учебный проект` <a href="https://github.com/script-ninja/mesto">Mesto</a> `перенесённый на React.`
+
+<br />
+<br />
+<br />
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
