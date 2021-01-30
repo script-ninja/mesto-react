@@ -29,15 +29,10 @@ export default function App() {
   }
 
   function closeAllPopups(event) {
-    if (
-      event.target.classList.contains('popup__button-close') ||
-      event.target === event.currentTarget
-    ) {
       openAvatarPopup(false);
       openProfilePopup(false);
       openPlacePopup(false);
       setSelectedCard(null);
-    }
   }
 
 
