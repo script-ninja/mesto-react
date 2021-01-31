@@ -15,6 +15,16 @@ export default function Main(props) {
   }, []);
 
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(like => like._id === currentUser._id);
+
+    api.toggleLike(card._id, isLiked)
+    .then((newCard) => {
+      const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+      setCards(newCards);
+    });
+  }
+
   return (
     <main className="content">
       <section className="profile content__profile">
@@ -36,8 +46,19 @@ export default function Main(props) {
       </section>
 
       <section className="gallery">
-        {cards.length <= 0 && <h2 className="gallery__message gallery__message_visible">Нет добавленных фотографий</h2>}
-        {cards.map(card => <Card key={card._id} card={card} onCardClick={props.onCardClick} />)}
+        {
+          cards.length <= 0 &&
+          <h2 className="gallery__message gallery__message_visible">Нет добавленных фотографий</h2>
+        }
+        {
+          cards.map(card =>
+            <Card key={card._id}
+              card={card}
+              onCardClick={props.onCardClick}
+              onCardLike={handleCardLike}
+            />
+          )
+        }
       </section>
     </main>
   );
