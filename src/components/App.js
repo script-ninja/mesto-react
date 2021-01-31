@@ -3,6 +3,7 @@ import Header from './Header';
 import Main   from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
@@ -52,13 +53,32 @@ export default function App() {
 
   function handleUpdateUser({ name, about }) {
     api.setUserData({ name, about })
-    .then((newData) => {
-      setCurrentUser(newData);
+    .then((user) => {
+      setCurrentUser(user);
       closeAllPopups();
     })
     .catch(error => { console.log(error); });
   }
 
+
+  function handleUpdateAvatar(url) {
+    api.setUserAvatar(url)
+    .then((user) => {
+      setCurrentUser(user);
+      closeAllPopups();
+    })
+    .catch(error => { console.log(error); });
+  }
+
+
+  function handlePopupClose(event) {
+    if (
+      event.target.classList.contains('popup__button-close') ||
+      event.target === event.currentTarget
+    ) {
+      closeAllPopups();
+    }
+  }
 
   function closeAllPopups() {
     openAvatarPopup(false);
@@ -82,28 +102,18 @@ export default function App() {
       </div>
 
 
-      <PopupWithForm
-        name="avatar"
-        title="Обновить аватар"
-        submitButtonText="Сохранить"
+      <EditAvatarPopup
+        onUpdateAvatar={handleUpdateAvatar}
         isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-      >
-        <label className="form__field" htmlFor="avatar-link">
-          <input
-            id="avatar-link"
-            className="form__text"
-            type="url"
-            name="avatar-link"
-            placeholder="Ссылка на картинку"
-            required
-          />
-          <span id="avatar-link-error" className="form__text-error"></span>
-        </label>
-      </PopupWithForm>
+        onClose={handlePopupClose}
+      />
 
 
-      <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+      <EditProfilePopup
+        onUpdateUser={handleUpdateUser}
+        isOpen={isEditProfilePopupOpen}
+        onClose={handlePopupClose}
+      />
 
 
       <PopupWithForm
@@ -111,7 +121,7 @@ export default function App() {
         title="Новое место"
         submitButtonText="Создать"
         isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClose}
       >
         <label className="form__field" htmlFor="place-name">
           <input
@@ -144,7 +154,7 @@ export default function App() {
       >
       </PopupWithForm>
 
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+      <ImagePopup card={selectedCard} onClose={handlePopupClose} />
     </CurrentUserContext.Provider>
   );
 }
