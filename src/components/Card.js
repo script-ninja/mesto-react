@@ -1,7 +1,7 @@
 import React from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
-export default function Card({ card, onCardClick, onCardLike }) {
+export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   function handleClick() {
@@ -10,6 +10,10 @@ export default function Card({ card, onCardClick, onCardLike }) {
 
   function handleLike() {
     onCardLike(card);
+  }
+
+  function handleDelete() {
+    onCardDelete(card);
   }
 
   return (
@@ -26,7 +30,10 @@ export default function Card({ card, onCardClick, onCardLike }) {
         >
           {card.likes.length}
         </button>
-        {(card.owner._id === currentUser._id) && <button className="photo-card__del-button" type="button"></button>}
+        {
+          (card.owner._id === currentUser._id) &&
+          <button className="photo-card__del-button" type="button" onClick={handleDelete}></button>
+        }
       </figcaption>
     </figure>
   );

@@ -22,7 +22,20 @@ export default function Main(props) {
     .then((newCard) => {
       const newCards = cards.map((c) => c._id === card._id ? newCard : c);
       setCards(newCards);
-    });
+    })
+    .catch(error => { console.log(error); });
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+    .then(() => {
+      const newCards = [];
+      cards.forEach((c) => {
+        if (c !== card) newCards.push(c);
+      });
+      setCards(newCards);
+    })
+    .catch(error => { console.log(error); });
   }
 
   return (
@@ -56,6 +69,7 @@ export default function Main(props) {
               card={card}
               onCardClick={props.onCardClick}
               onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
             />
           )
         }
