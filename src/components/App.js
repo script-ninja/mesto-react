@@ -35,6 +35,7 @@ export default function App() {
 
 
   const [currentUser, setCurrentUser] = React.useState({
+    _id: 0,
     name: 'Жак-Ив Кусто',
     about: 'Исследователь океана',
     avatar: avatarDefault
@@ -42,11 +43,7 @@ export default function App() {
   React.useEffect(() => {
     api.getUserData()
     .then(userData => {
-      setCurrentUser({
-        name: userData.name,
-        about: userData.about,
-        avatar: userData.avatar
-      })
+      setCurrentUser(userData)
     })
     .catch(error => { console.log(error); });
   }, []);
