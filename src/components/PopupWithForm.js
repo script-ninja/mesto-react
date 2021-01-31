@@ -1,11 +1,21 @@
 export default function PopupWithForm(props) {
+  function handleClose(event) {
+    if (
+      event.target.classList.contains('popup__button-close') ||
+      event.target === event.currentTarget
+    ) {
+      props.onClose();
+    }
+  }
+
+
   return (
     <section
       className={`popup${props.isOpen ? ' popup_visible' : ''}`}
       data-type={props.name}
-      onClick={props.onClose}
+      onClick={handleClose}
     >
-      <form className="form" name={props.name}>
+      <form className="form" name={props.name} onSubmit={props.onSubmit}>
         <h2 className="form__title">{props.title}</h2>
 
         {props.children}

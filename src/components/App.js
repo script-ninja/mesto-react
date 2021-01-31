@@ -3,6 +3,7 @@ import Header from './Header';
 import Main   from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -49,8 +50,17 @@ export default function App() {
   }, []);
 
 
+  function handleUpdateUser({ name, about }) {
+    api.setUserData({ name, about })
+    .then((newData) => {
+      setCurrentUser(newData);
+      closeAllPopups();
+    })
+    .catch(error => { console.log(error); });
+  }
 
-  function closeAllPopups(event) {
+
+  function closeAllPopups() {
     openAvatarPopup(false);
     openProfilePopup(false);
     openPlacePopup(false);
@@ -70,6 +80,7 @@ export default function App() {
         />
         <Footer />
       </div>
+
 
       <PopupWithForm
         name="avatar"
@@ -91,36 +102,9 @@ export default function App() {
         </label>
       </PopupWithForm>
 
-      <PopupWithForm
-        name="profile"
-        title="Редактировать профиль"
-        submitButtonText="Сохранить"
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-      >
-        <label className="form__field" htmlFor="profile-name">
-          <input
-            id="profile-name"
-            className="form__text"
-            type="text"
-            name="user-name"
-            placeholder="Ваше имя"
-            minLength="2" maxLength="40" required
-          />
-          <span id="profile-name-error" className="form__text-error"></span>
-        </label>
-        <label className="form__field" htmlFor="profile-hobby">
-          <input
-            id="profile-hobby"
-            className="form__text"
-            type="text"
-            name="user-hobby"
-            placeholder="Ваше хобби"
-            minLength="2" maxLength="200" required
-          />
-          <span id="profile-hobby-error" className="form__text-error"></span>
-        </label>
-      </PopupWithForm>
+
+      <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+
 
       <PopupWithForm
         name="place"

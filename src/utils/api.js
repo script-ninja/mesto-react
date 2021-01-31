@@ -22,7 +22,7 @@ class API {
     });
   }
 
-  setUserData({ name, info }) {
+  setUserData({ name, about }) {
     return fetch(`${this._baseURL}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -30,8 +30,8 @@ class API {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        name: name,
-        about: info
+        name,
+        about
       })
     })
     .then(response => {
