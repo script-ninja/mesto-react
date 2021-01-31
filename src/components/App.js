@@ -4,40 +4,65 @@ import Main   from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import api from '../utils/api';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import avatarDefault from '../images/profile__avatar.jpg'
 
 
 export default function App() {
   const [isEditAvatarPopupOpen, openAvatarPopup] = React.useState(false);
-  const [isEditProfilePopupOpen, openProfilePopup] = React.useState(false);
-  const [isAddPlacePopupOpen, openPlacePopup] = React.useState(false);
-
-  const [selectedCard, setSelectedCard] = React.useState(null);
-
-
   function handleEditAvatarClick() {
     openAvatarPopup(true);
   }
+
+
+  const [isEditProfilePopupOpen, openProfilePopup] = React.useState(false);
   function handleEditProfileClick() {
     openProfilePopup(true);
   }
+
+
+  const [isAddPlacePopupOpen, openPlacePopup] = React.useState(false);
   function handleAddPlaceClick() {
     openPlacePopup(true);
   }
 
+
+  const [selectedCard, setSelectedCard] = React.useState(null);
   function handleCardClick(card) {
     setSelectedCard(card);
   }
 
+
+  const [currentUser, setCurrentUser] = React.useState({
+    name: 'Жак-Ив Кусто',
+    about: 'Исследователь океана',
+    avatar: avatarDefault
+  });
+  React.useEffect(() => {
+    api.getUserData()
+    .then(userData => {
+      setCurrentUser({
+        name: userData.name,
+        about: userData.about,
+        avatar: userData.avatar
+      })
+    })
+    .catch(error => { console.log(error); });
+  }, []);
+
+
+
   function closeAllPopups(event) {
-      openAvatarPopup(false);
-      openProfilePopup(false);
-      openPlacePopup(false);
-      setSelectedCard(null);
+    openAvatarPopup(false);
+    openProfilePopup(false);
+    openPlacePopup(false);
+    setSelectedCard(null);
   }
 
 
   return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
         <Header />
         <Main
@@ -139,6 +164,6 @@ export default function App() {
       </PopupWithForm>
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-    </>
+    </CurrentUserContext.Provider>
   );
 }
